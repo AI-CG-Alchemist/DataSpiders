@@ -84,29 +84,48 @@ def getBiliBiliVideo(link, bv, index):
 
     videoJson = json.loads(videoPlayInfo)
     try:
-        videoURL = videoJson['data']['dash']['video'][0]['baseUrl']
+        flag = 0
     except Exception:
-        videoURL = videoURL = videoJson['data']['durl'][0]['url']
-    print("视频下载地址:"+videoURL)  # debug
+        # videoURL = videoURL = videoJson['data']['durl'][0]['url']
+        print("早期视频暂时不提供下载！")
+        return
 
     dirName = destFolder.encode("utf-8").decode("utf-8")
     if not os.path.exists(dirName):
         os.makedirs(dirName)
-        print("存储点创建成功")
-
-    path = dirName + "/"+str(index)+"-"+bv+"_Video.mp4"
-    print("文件存储地址:"+path)  # debug
+        # print("存储点创建成功") #debug
 
     print("正在下载第"+str(index)+"个视频："+bv+"....")
-    end = fileDownload(link=link, videoURL=videoURL,
-                       path=path, session=session)
-    print("第"+str(index)+"个视频下载完成,文件大小:"+str(end)+"MB")
+    if flag == 0:
+        videoURL = videoJson['data']['dash']['video'][0]['baseUrl']
+        print("视频下载地址:"+videoURL)  # debug
+        videoPath = dirName + "/"+"TMP_"+str(index)+"-"+bv+"_Video.mp4"
+        fileDownload(link=link, url=videoURL,
+                     path=videoPath, session=session)
+        audioURL = videoJson['data']['dash']['audio'][0]['baseUrl']
+        print("音频下载地址:"+audioURL)  # debug
+        audioPath = dirName + "/"+str(index)+"-"+bv+"_Audio.mp3"
+        fileDownload(link=link, url=audioURL, path=audioPath, session=session)
+        outPath = dirName + "/"+str(index)+"-"+bv+"_Video.mp4"
+        print("文件存储地址:"+outPath)  # debug
+        combineVideoAudio(videoPath, audioPath, outPath)
+    print("第"+str(index)+"个视频下载完成")
+
+
+'''合并视频与音频'''
+
+
+def combineVideoAudio(videoPath, audioPath, outPath):
+    subprocess.call(("ffmpeg -i " + videoPath +
+                    " -i " + audioPath + " -c copy " + outPath).encode("utf-8").decode("utf-8"), shell=True)
+    os.remove(videoPath)
+    os.remove(audioPath)
 
 
 ''' 分段下载视频更加稳定'''
 
 
-def fileDownload(link, videoURL, path, session=requests.session()):
+def fileDownload(link, url, path, session=requests.session()):
     headers.update({'Referer': link, "Cookie": ""})
     session.options(url=link, headers=headers, verify=False)
     begin = 0
@@ -116,14 +135,14 @@ def fileDownload(link, videoURL, path, session=requests.session()):
         headers.update({'Range': 'bytes=' + str(begin) + '-' + str(end)})
 
         # 获取视频分片
-        res = session.get(url=videoURL, headers=headers, verify=False)
+        res = session.get(url=url, headers=headers, verify=False)
         if res.status_code != 416:
             # 响应码不为为416时有数据
             begin = end + 1
             end = end + 1024*512
         else:
             headers.update({'Range': str(end + 1) + '-'})
-            res = session.get(url=videoURL, headers=headers, verify=False)
+            res = session.get(url=url, headers=headers, verify=False)
             flag = 1
         with open(path.encode("utf-8").decode("utf-8"), 'ab') as fp:
             fp.write(res.content)
@@ -131,7 +150,6 @@ def fileDownload(link, videoURL, path, session=requests.session()):
         if flag == 1:
             fp.close()
             break
-    return round(end/1024/1024, 3)
 
 
 if __name__ == '__main__':
@@ -142,7 +160,7 @@ if __name__ == '__main__':
 
     # 测试用
     destFolder = "result"
-    prompt = "排球少年"
-    num = 5
+    prompt = "街头采访穿搭"
+    num = 3
 
     solve()
