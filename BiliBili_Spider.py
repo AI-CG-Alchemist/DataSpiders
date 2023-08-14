@@ -21,13 +21,13 @@ headers = {
     "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3970.5 Safari/537.36',
     'Referer': 'https://search.bilibili.com',
     # 需要去首页寻找填一下
-    'Cookie': "buvid3=C7BB5835-3168-999D-D869-00DD2070B75310927infoc; b_nut=1690463110; _uuid=E38292410-BC93-7D6A-10BA8-CD98E610A6A6310147infoc; buvid4=70A5848B-AAC5-290C-B20F-4536AE00247118866-023072721-hMsvJD35An8mLG1L9vVCPw%3D%3D; CURRENT_FNVAL=4048; i-wanna-go-back=-1; FEED_LIVE_VERSION=V8; header_theme_version=CLOSE; nostalgia_conf=-1; rpdid=|(u)YRJ)JJ|k0J'uYm|~~Jk~l; CURRENT_QUALITY=116; buvid_fp_plain=undefined; sid=7yl1kne0; bili_ticket=eyJhbGciOiJFUzM4NCIsImtpZCI6ImVjMDIiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE2OTE3NTkwNjMsImlhdCI6MTY5MTQ5OTg2MywicGx0IjotMX0.Akdab0vrZWUTpqn6C3k2zKP_SFXjRDNEKXeRdAccbgbW0RaGEDqpIZjWdeDf6qYYplxx_MXbUCAv_Eh2LLkmqs93xZXGFK_XelWIFzjmrJ2U37Ikav89Yo8NNoVu5ZXk; bili_ticket_expires=1691759063; fingerprint=e9a753c5f26689a80d2fbe61f16e87b4; bp_video_offset_479496467=827477642029563923; innersign=0; PVID=1; b_lsid=C2EFCFC10_189D8EC2F73; bsource=search_bing; b_ut=7; home_feed_column=5; browser_resolution=1440-659; buvid_fp=e9a753c5f26689a80d2fbe61f16e87b4"
+    'Cookie': "buvid3=C7BB5835-3168-999D-D869-00DD2070B75310927infoc; b_nut=1690463110; _uuid=E38292410-BC93-7D6A-10BA8-CD98E610A6A6310147infoc; buvid4=70A5848B-AAC5-290C-B20F-4536AE00247118866-023072721-hMsvJD35An8mLG1L9vVCPw%3D%3D; CURRENT_FNVAL=4048; i-wanna-go-back=-1; FEED_LIVE_VERSION=V8; header_theme_version=CLOSE; nostalgia_conf=-1; rpdid=|(u)YRJ)JJ|k0J'uYm|~~Jk~l; buvid_fp_plain=undefined; fingerprint=e9a753c5f26689a80d2fbe61f16e87b4; PVID=1; buvid_fp=e9a753c5f26689a80d2fbe61f16e87b4; DedeUserID=479496467; DedeUserID__ckMd5=08b57da3bdbc65d8; b_ut=5; SESSDATA=5980aa37%2C1707457625%2C350e8%2A82OpbT7oqOzMjiSiO7sJkdG62VPtXuP3tZp8SiOQ59Hy6cw3NtkAMb_Jw3sWT9wlzbMBUGGQAAQwA; bili_jct=e288bfe06dd29bbe0e1141646b2dd5da; bili_ticket=eyJhbGciOiJFUzM4NCIsImtpZCI6ImVjMDIiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE2OTIxNjQ4MzUsImlhdCI6MTY5MTkwNTYzNSwicGx0IjotMX0.LzaBwfZFsKLM_1rI5WmCB7IGty-n4L-a_41QM7jA3wz1hgQQDViFmSBZCkdKElIBioY3Kebe-CbEQ79wQo_94rRVjtIOtCj0ts46pyjBRsEdBkyKLD9lCr0fzBil7Au2; bili_ticket_expires=1692164835; sid=8fx6aod6; b_lsid=43BA91D7_189EDCC74BC; bp_video_offset_479496467=829244806335037457; CURRENT_QUALITY=80; innersign=0; home_feed_column=4; browser_resolution=718-659"
 }
 
 
 def solve():
     # 首先获取共搜寻视频数量
-    baseURL = 'https://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword='+prompt
+    baseURL = 'https://api.bilibili.com/x/web-interface/search/type?search_type=video&duration=1&keyword='+prompt
     data = fetchData(baseURL)["data"]
     page_num = data['numPages']
     video_num = data['numResults']
@@ -160,7 +160,7 @@ if __name__ == '__main__':
 
     # 测试用
     destFolder = "result"
-    prompt = "街头采访穿搭"
-    num = 3
+    prompt = "马斯克采访"
+    num = 5
 
     solve()
